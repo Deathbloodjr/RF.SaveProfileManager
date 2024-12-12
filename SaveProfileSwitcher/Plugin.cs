@@ -21,8 +21,7 @@ namespace SaveProfileSwitcher
 
 
         public ConfigEntry<bool> ConfigEnabled;
-        public ConfigEntry<string> ConfigSongTitleLanguageOverride;
-        public ConfigEntry<float> ConfigFlipInterval;
+        public ConfigEntry<string> ConfigSaveFileName;
 
 
 
@@ -44,6 +43,11 @@ namespace SaveProfileSwitcher
                 "Enabled",
                 true,
                 "Enables the mod.");
+
+            ConfigSaveFileName = Config.Bind("General",
+                "SaveFileName",
+                "",
+                "Sets the save file name to use. Leave blank for your default save.");
         }
 
         private void SetupHarmony()

@@ -19,7 +19,8 @@ namespace SaveProfileSwitcher.Plugins
             //Plugin.Log.LogInfo(__result);
 
             var split = __result.Split("\\");
-            split[split.Length - 2] = "Drum";
+            //split[split.Length - 2] = "DEBUG";
+            split[split.Length - 2] = Plugin.Instance.ConfigSaveFileName.Value;
             __result = Path.Combine(split);
 
             Plugin.Log.LogInfo(__result);
