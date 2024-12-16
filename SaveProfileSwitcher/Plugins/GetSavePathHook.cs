@@ -18,10 +18,13 @@ namespace SaveProfileSwitcher.Plugins
         {
             //Plugin.Log.LogInfo(__result);
 
-            var split = __result.Split("\\");
-            //split[split.Length - 2] = "DEBUG";
-            split[split.Length - 2] = Plugin.Instance.ConfigSaveFileName.Value;
-            __result = Path.Combine(split);
+            if (Plugin.Instance.ConfigSaveFileName.Value != Plugin.Instance.ConfigSaveFileName.DefaultValue)
+            {
+                var split = __result.Split("\\");
+                //split[split.Length - 2] = "DEBUG";
+                split[split.Length - 2] = Plugin.Instance.ConfigSaveFileName.Value;
+                __result = Path.Combine(split);
+            }
 
             Plugin.Log.LogInfo(__result);
         }
