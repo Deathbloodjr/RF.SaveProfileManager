@@ -60,6 +60,7 @@ namespace SaveProfileSwitcher
                 bool result = true;
                 // If any PatchFile fails, result will become false
                 result &= PatchFile(typeof(GetSavePathHook));
+                result &= PatchFile(typeof(TestingHooks));
                 if (result)
                 {
                     Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_NAME} is loaded!");
