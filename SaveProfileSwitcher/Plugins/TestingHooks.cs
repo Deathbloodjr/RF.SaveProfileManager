@@ -38,7 +38,9 @@ namespace SaveProfileSwitcher.Plugins
             obj.transform.SetParent(canvas.transform);
 
             obj.AddComponent<SaveProfileSwitcherObject>();
-            
+
+            titleSceneInstance = __instance;
+
             return true;
         }
     }

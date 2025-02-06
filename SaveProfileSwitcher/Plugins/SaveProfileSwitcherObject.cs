@@ -1,4 +1,5 @@
-﻿using Il2CppInterop.Runtime.Injection;
+﻿using Cysharp.Threading.Tasks.Linq;
+using Il2CppInterop.Runtime.Injection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,26 +50,23 @@ namespace SaveProfileSwitcher.Plugins
             {
                 // Change to previous profile
                 Logger.Log("Save Profile changed to DEBUG");
-                Logger.Log("TestingHooks.titleSceneInstance.skipped: " + TestingHooks.titleSceneInstance.skipped);
                 GetSavePathHook.ProfileName = "DEBUG";
             }
             else if (dir == ControllerManager.Dir.Right)
             {
                 // Change to next profile
                 Logger.Log("Save Profile changed to Drum");
-                Logger.Log("TestingHooks.titleSceneInstance.skipped: " + TestingHooks.titleSceneInstance.skipped);
                 GetSavePathHook.ProfileName = "Drum";
             }
             else if (dir == ControllerManager.Dir.Up)
             {
                 // Change to next profile
                 Logger.Log("Save Profile changed to Default");
-                Logger.Log("TestingHooks.titleSceneInstance.skipped: " + TestingHooks.titleSceneInstance.skipped);
                 GetSavePathHook.ProfileName = "Default";
             }
             else if (TaikoSingletonMonoBehaviour<ControllerManager>.Instance.GetOkDown(ControllerManager.ControllerPlayerNo.Player1))
             {
-                if (TestingHooks.titleSceneInstance.skipped)
+                if (TestingHooks.titleSceneInstance.skipped || !TestingHooks.titleSceneInstance.TitleAnimator.IsPlaying("In"))
                 {
                     if (GetSavePathHook.ProfileChanged())
                     {
