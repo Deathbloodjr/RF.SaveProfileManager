@@ -22,6 +22,7 @@ namespace SaveProfileSwitcher
 
         public ConfigEntry<bool> ConfigEnabled;
         public ConfigEntry<string> ConfigSaveFileName;
+        public ConfigEntry<string> ConfigSaveProfileDefinitionsPath;
 
 
 
@@ -48,6 +49,11 @@ namespace SaveProfileSwitcher
                 "SaveFileName",
                 "",
                 "Sets the save file name to use. Leave blank for your default save.");
+
+            ConfigSaveProfileDefinitionsPath = Config.Bind("General",
+                "SaveProfileDefinitionsPath",
+                Path.Combine(dataFolder, "SaveProfileDefinitions.json"),
+                "The path to the json file containing save profile definitions. ");
         }
 
         private void SetupHarmony()
@@ -63,6 +69,7 @@ namespace SaveProfileSwitcher
                 result &= PatchFile(typeof(TestingHooks));
                 if (result)
                 {
+                    SaveDataManager.Initialize();
                     Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_NAME} is loaded!");
                 }
                 else

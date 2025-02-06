@@ -13,6 +13,8 @@ namespace SaveProfileSwitcher.Plugins
     {
         static SaveProfileSwitcherObject() => ClassInjector.RegisterTypeInIl2Cpp<SaveProfileSwitcherObject>();
 
+        int profileIndex = 0;
+
         public void Start()
         {
 
@@ -49,20 +51,12 @@ namespace SaveProfileSwitcher.Plugins
             if (dir == ControllerManager.Dir.Left)
             {
                 // Change to previous profile
-                Logger.Log("Save Profile changed to DEBUG");
-                GetSavePathHook.ProfileName = "DEBUG";
+                ChangeProfilePrev();
             }
             else if (dir == ControllerManager.Dir.Right)
             {
                 // Change to next profile
-                Logger.Log("Save Profile changed to Drum");
-                GetSavePathHook.ProfileName = "Drum";
-            }
-            else if (dir == ControllerManager.Dir.Up)
-            {
-                // Change to next profile
-                Logger.Log("Save Profile changed to Default");
-                GetSavePathHook.ProfileName = "Default";
+                ChangeProfileNext();
             }
             else if (TaikoSingletonMonoBehaviour<ControllerManager>.Instance.GetOkDown(ControllerManager.ControllerPlayerNo.Player1))
             {
@@ -74,6 +68,39 @@ namespace SaveProfileSwitcher.Plugins
                     }
                 }
             }
+        }
+
+        void ChangeProfileNext()
+        {
+            profileIndex++;
+            var list = SaveDataManager.SaveData;
+            if (profileIndex >= list.Count)
+            {
+                profileIndex = 0;
+            }
+            ChangeSaveProfile(profileIndex);
+        }
+        void ChangeProfilePrev()
+        {
+            profileIndex--;
+            var list = SaveDataManager.SaveData;
+            if (profileIndex < 0)
+            {
+                profileIndex = list.Count - 1;
+            }
+            ChangeSaveProfile(profileIndex);
+        }
+
+        void ChangeSaveProfile(int newIndex)
+        {
+            var list = SaveDataManager.SaveData;
+            if (newIndex < 0 || newIndex >= list.Count)
+            {
+                return;
+            }
+
+            GetSavePathHook.ProfileName = list[profileIndex].ProfileName;
+            Logger.Log("Save Profile changed to " + list[profileIndex].ProfileName);
         }
     }
 }
