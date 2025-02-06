@@ -22,10 +22,16 @@ namespace SaveProfileSwitcher.Plugins
                 throw new ArgumentNullException(nameof(jsonNode));
             }
 
-            ProfileName = jsonNode["ProfileName"].GetValue<string>();
-            if (ColorUtility.DoTryParseHtmlColor(jsonNode["ProfileColor"].GetValue<string>(), out var color))
+            // ProfileName is required
+            ProfileName = jsonNode["ProfileName"]!.GetValue<string>();
+
+            // ProfileColor is optional
+            if (jsonNode["ProfileColor"] is not null)
             {
-                ProfileColor = color;
+                if (ColorUtility.DoTryParseHtmlColor(jsonNode["ProfileColor"]!.GetValue<string>(), out var color))
+                {
+                    ProfileColor = color;
+                }
             }
         }
     }
