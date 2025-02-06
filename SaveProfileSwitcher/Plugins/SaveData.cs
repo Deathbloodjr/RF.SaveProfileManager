@@ -12,7 +12,7 @@ namespace SaveProfileSwitcher.Plugins
     {
         public string ProfileName { get; }
         //public string ProfilePicturePath { get; set; }
-        public Color ProfileColor { get; }
+        public Color ProfileColor { get; } = Color.clear;
         //public string UserName { get; set; }
 
         public SaveData(JsonNode? jsonNode)

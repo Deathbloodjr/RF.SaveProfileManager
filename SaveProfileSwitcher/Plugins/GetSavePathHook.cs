@@ -10,8 +10,8 @@ namespace SaveProfileSwitcher.Plugins
 {
     internal class GetSavePathHook
     {
-        public static string ProfileName = Plugin.Instance.ConfigSaveFileName.Value;
-        public static string PreviousName = Plugin.Instance.ConfigSaveFileName.Value;
+        public static string ProfileName = "Default";
+        public static string PreviousName = "Default";
 
         [HarmonyPatch(typeof(SteamSave))]
         [HarmonyPatch(nameof(SteamSave.GetSavePath))]
@@ -21,8 +21,7 @@ namespace SaveProfileSwitcher.Plugins
         {
             //Plugin.Log.LogInfo(__result);
 
-            if (ProfileName != Plugin.Instance.ConfigSaveFileName.DefaultValue &&
-                ProfileName != "Default")
+            if (ProfileName != "Default")
             {
                 var split = __result.Split("\\");
                 //split[split.Length - 2] = "DEBUG";

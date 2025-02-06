@@ -21,7 +21,7 @@ namespace SaveProfileSwitcher
 
 
         public ConfigEntry<bool> ConfigEnabled;
-        public ConfigEntry<string> ConfigSaveFileName;
+        //public ConfigEntry<string> ConfigSaveFileName;
         public ConfigEntry<string> ConfigSaveProfileDefinitionsPath;
 
 
@@ -45,10 +45,10 @@ namespace SaveProfileSwitcher
                 true,
                 "Enables the mod.");
 
-            ConfigSaveFileName = Config.Bind("General",
-                "SaveFileName",
-                "",
-                "Sets the save file name to use. Leave blank for your default save.");
+            //ConfigSaveFileName = Config.Bind("General",
+            //    "SaveFileName",
+            //    "",
+            //    "Sets the save file name to use. Leave blank for your default save.");
 
             ConfigSaveProfileDefinitionsPath = Config.Bind("General",
                 "SaveProfileDefinitionsPath",

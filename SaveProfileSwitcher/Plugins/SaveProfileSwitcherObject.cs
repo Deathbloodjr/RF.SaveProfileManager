@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SaveProfileSwitcher.Plugins
 {
@@ -13,11 +15,30 @@ namespace SaveProfileSwitcher.Plugins
     {
         static SaveProfileSwitcherObject() => ClassInjector.RegisterTypeInIl2Cpp<SaveProfileSwitcherObject>();
 
+        TextMeshProUGUI? ProfileText = null;
+        Image? ProfileImage = null;
+
+
         int profileIndex = 0;
 
         public void Start()
         {
-
+            if (ProfileText is null)
+            {
+                var nameObject = new GameObject("ProfileName");
+                nameObject.transform.SetParent(transform);
+                ProfileText = nameObject.AddComponent<TextMeshProUGUI>();
+                ProfileText.alignment = TextAlignmentOptions.Center;
+                ProfileText.transform.position = new Vector2(750, 270);
+                ProfileText.text = GetSavePathHook.ProfileName;
+            }
+            if (ProfileImage is null)
+            {
+                var imageObject = new GameObject("ProfileImage");
+                imageObject.transform.SetParent(transform);
+                ProfileImage = imageObject.AddComponent<Image>();
+                imageObject.transform.position = new Vector2(750, 360);
+            }
         }
 
         public void Update()
@@ -99,8 +120,13 @@ namespace SaveProfileSwitcher.Plugins
                 return;
             }
 
-            GetSavePathHook.ProfileName = list[profileIndex].ProfileName;
-            Logger.Log("Save Profile changed to " + list[profileIndex].ProfileName);
+            var name = list[profileIndex].ProfileName;
+            ProfileText!.text = name;
+            GetSavePathHook.ProfileName = name;
+            //Logger.Log("Save Profile changed to " + name);
+
+            ProfileImage!.color = list[profileIndex].ProfileColor;
+
         }
     }
 }
