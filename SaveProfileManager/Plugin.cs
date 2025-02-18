@@ -4,16 +4,16 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using BepInEx.Configuration;
-using SaveProfileSwitcher.Plugins;
+using SaveProfileManager.Plugins;
 using UnityEngine;
 using System.Collections;
 
-namespace SaveProfileSwitcher
+namespace SaveProfileManager
 {
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, ModName, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BasePlugin
     {
-        public const string ModName = "SaveProfileSwitcher";
+        public const string ModName = "SaveProfileManager";
 
         public static Plugin Instance;
         private Harmony _harmony = null;

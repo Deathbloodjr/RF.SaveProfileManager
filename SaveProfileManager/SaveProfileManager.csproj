@@ -4,9 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ModName>SaveProfileSwitcher</ModName>
+    <ModName>SaveProfileManager</ModName>
     <ModVersion>0.0.1</ModVersion>
-    <Description>A Rhythm Festival mod to switch to separate save files. </Description>
+    <Description>A Rhythm Festival mod to manager save files and mod save data. </Description>
   </PropertyGroup>
   
   <Target Name="UserFile" AfterTargets="PreBuildEvent">

@@ -9,11 +9,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SaveProfileSwitcher.Plugins
+namespace SaveProfileManager.Plugins
 {
-    internal class SaveProfileSwitcherObject : MonoBehaviour
+    internal class SaveProfileManagerObject : MonoBehaviour
     {
-        static SaveProfileSwitcherObject() => ClassInjector.RegisterTypeInIl2Cpp<SaveProfileSwitcherObject>();
+        static SaveProfileManagerObject() => ClassInjector.RegisterTypeInIl2Cpp<SaveProfileManagerObject>();
 
         TextMeshProUGUI? ProfileText = null;
         Image? ProfileImage = null;

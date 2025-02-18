@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SaveProfileSwitcher.Plugins
+namespace SaveProfileManager.Plugins
 {
     internal class SaveData
     {

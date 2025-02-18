@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SaveProfileSwitcher.Plugins
+namespace SaveProfileManager.Plugins
 {
     internal class GetSavePathHook
     {

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SaveProfileSwitcher.Plugins
+namespace SaveProfileManager.Plugins
 {
     internal class TestingHooks
     {
@@ -37,7 +37,7 @@ namespace SaveProfileSwitcher.Plugins
             GameObject canvas = GameObject.Find("CanvasFg");
             obj.transform.SetParent(canvas.transform);
 
-            obj.AddComponent<SaveProfileSwitcherObject>();
+            obj.AddComponent<SaveProfileManagerObject>();
 
             titleSceneInstance = __instance;
 
