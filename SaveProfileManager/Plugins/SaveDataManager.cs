@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace SaveProfileManager.Plugins
 {
-    internal static class SaveDataManager
+    public static class SaveDataManager
     {
-        public static List<SaveData> SaveData = new List<SaveData>();
+        static SaveData CurrentProfile = null;
+        internal static List<SaveData> SaveData = new List<SaveData>();
+        internal static List<PluginSaveDataInterface> PluginSaveDataInterfaces = new List<PluginSaveDataInterface>();
 
-        public static void Initialize()
+        internal static void Initialize()
         {
             string filePath = Plugin.Instance.ConfigSaveProfileDefinitionsPath.Value;
 
@@ -36,9 +38,57 @@ namespace SaveProfileManager.Plugins
                     continue;
                 }
             }
+
+            if (SaveData.Count > 0)
+            {
+                CurrentProfile = SaveData[0];
+            }
+            else
+            {
+                // Surely there should be DEFAULT at least, no?
+                Logger.Log("No SaveData profiles found", LogType.Error);
+            }
         }
 
+        internal static bool ChangeProfile(int index)
+        {
+            SaveData switchToProfile = SaveData[index];
+            if (switchToProfile != CurrentProfile)
+            {
+                GetSavePathHook.ProfileName = switchToProfile.ProfileName;
+                if (switchToProfile.ProfileName == "DEBUG")
+                {
+                    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+                    {
+                        PluginSaveDataInterfaces[i].UnloadFunction?.Invoke();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+                    {
+                        PluginSaveDataInterfaces[i].LoadFunction?.Invoke();
+                    }
+                }
+                CurrentProfile = switchToProfile;
+                return true;
+            }
+            return false;
+        }
 
+        public static void AddPluginSaveData(PluginSaveDataInterface plugin)
+        {
+            for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+            {
+                if (PluginSaveDataInterfaces[i].Name == plugin.Name)
+                {
+                    return;
+                }
+            }
+
+            PluginSaveDataInterfaces.Add(plugin);
+            Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
+        }
 
         static void CreateDefaultJson()
         {

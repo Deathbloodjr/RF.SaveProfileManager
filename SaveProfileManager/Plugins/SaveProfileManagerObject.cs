@@ -83,7 +83,7 @@ namespace SaveProfileManager.Plugins
             {
                 if (TestingHooks.titleSceneInstance.skipped || !TestingHooks.titleSceneInstance.TitleAnimator.IsPlaying("In"))
                 {
-                    if (GetSavePathHook.ProfileChanged())
+                    if (SaveDataManager.ChangeProfile(profileIndex))
                     {
                         TaikoSingletonMonoBehaviour<CommonObjects>.Instance.SaveData.LoadAsync();
                     }
@@ -122,11 +122,7 @@ namespace SaveProfileManager.Plugins
 
             var name = list[profileIndex].ProfileName;
             ProfileText!.text = name;
-            GetSavePathHook.ProfileName = name;
-            //Logger.Log("Save Profile changed to " + name);
-
             ProfileImage!.color = list[profileIndex].ProfileColor;
-
         }
     }
 }
