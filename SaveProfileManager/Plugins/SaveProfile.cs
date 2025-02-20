@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace SaveProfileManager.Plugins
 {
-    internal class SaveData
+    internal class SaveProfile
     {
         public string ProfileName { get; }
         //public string ProfilePicturePath { get; set; }
         public Color ProfileColor { get; } = Color.clear;
         //public string UserName { get; set; }
 
-        public SaveData(JsonNode? jsonNode)
+        public SaveProfile(JsonNode? jsonNode)
         {
             if (jsonNode == null)
             {

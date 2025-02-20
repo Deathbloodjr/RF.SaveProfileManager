@@ -10,8 +10,8 @@ namespace SaveProfileManager.Plugins
 {
     public static class SaveDataManager
     {
-        static SaveData CurrentProfile = null;
-        internal static List<SaveData> SaveData = new List<SaveData>();
+        static SaveProfile CurrentProfile = null;
+        internal static List<SaveProfile> SaveData = new List<SaveProfile>();
         internal static List<PluginSaveDataInterface> PluginSaveDataInterfaces = new List<PluginSaveDataInterface>();
 
         internal static void Initialize()
@@ -28,7 +28,7 @@ namespace SaveProfileManager.Plugins
             {
                 try
                 {
-                    SaveData data = new SaveData(list[i]);
+                    SaveProfile data = new SaveProfile(list[i]);
                     Logger.Log("SaveData loaded: " + data.ProfileName);
                     SaveData.Add(data);
                 }
@@ -52,7 +52,7 @@ namespace SaveProfileManager.Plugins
 
         internal static bool ChangeProfile(int index)
         {
-            SaveData switchToProfile = SaveData[index];
+            SaveProfile switchToProfile = SaveData[index];
             if (switchToProfile != CurrentProfile)
             {
                 GetSavePathHook.ProfileName = switchToProfile.ProfileName;

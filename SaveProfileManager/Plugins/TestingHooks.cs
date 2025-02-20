@@ -1,9 +1,12 @@
 ﻿using HarmonyLib;
 using Platform;
 using Platform.Steam;
+using Scripts.OutGame.SongSelect;
 using Scripts.OutGame.Title;
+using Scripts.UserData;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +16,6 @@ namespace SaveProfileManager.Plugins
 {
     internal class TestingHooks
     {
-        //[HarmonyPatch(typeof(SaveSystem))]
-        //[HarmonyPatch(nameof(SaveSystem.InitializeAsync))]
-        //[HarmonyPatch(MethodType.Normal)]
-        //[HarmonyPrefix]
-        //public static void SaveSystem_InitializeAsync_Prefix(SaveSystem __instance)
-        //{
-        //    Logger.Log("SaveSystem_InitializeAsync_Prefix");
-
-        //}
-
         public static TitleSceneUiController titleSceneInstance;
 
         [HarmonyPatch(typeof(TitleSceneUiController))]

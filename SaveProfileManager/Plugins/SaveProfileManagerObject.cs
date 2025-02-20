@@ -18,11 +18,13 @@ namespace SaveProfileManager.Plugins
         TextMeshProUGUI? ProfileText = null;
         Image? ProfileImage = null;
 
+        bool isInputEnabled = true;
 
         int profileIndex = 0;
 
         public void Start()
         {
+            isInputEnabled = true;
             if (ProfileText is null)
             {
                 var nameObject = new GameObject("ProfileName");
@@ -87,6 +89,7 @@ namespace SaveProfileManager.Plugins
                     {
                         TaikoSingletonMonoBehaviour<CommonObjects>.Instance.SaveData.LoadAsync();
                     }
+                    isInputEnabled = false;
                 }
             }
         }

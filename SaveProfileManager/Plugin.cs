@@ -66,6 +66,7 @@ namespace SaveProfileManager
                 bool result = true;
                 // If any PatchFile fails, result will become false
                 result &= PatchFile(typeof(GetSavePathHook));
+                result &= PatchFile(typeof(AddSongsToLibraryPatch));
                 result &= PatchFile(typeof(TestingHooks));
                 if (result)
                 {
