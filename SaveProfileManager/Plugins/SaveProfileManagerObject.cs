@@ -55,6 +55,10 @@ namespace SaveProfileManager.Plugins
         float currentBuffer = 0;
         public void GetInput()
         {
+            if (!isInputEnabled)
+            {
+                return;
+            }
             if (currentBuffer != 0)
             {
                 currentBuffer -= Time.deltaTime;
