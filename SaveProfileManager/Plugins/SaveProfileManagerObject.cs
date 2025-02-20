@@ -32,7 +32,6 @@ namespace SaveProfileManager.Plugins
                 ProfileText = nameObject.AddComponent<TextMeshProUGUI>();
                 ProfileText.alignment = TextAlignmentOptions.Center;
                 ProfileText.transform.position = new Vector2(750, 270);
-                ProfileText.text = GetSavePathHook.ProfileName;
             }
             if (ProfileImage is null)
             {
@@ -41,6 +40,9 @@ namespace SaveProfileManager.Plugins
                 ProfileImage = imageObject.AddComponent<Image>();
                 imageObject.transform.position = new Vector2(750, 360);
             }
+
+            UpdateProfileDisplay(SaveDataManager.GetCurrentSaveProfile());
+            profileIndex = SaveDataManager.GetIndexOfCurrentProfile();
         }
 
         public void Update()
@@ -97,7 +99,7 @@ namespace SaveProfileManager.Plugins
         void ChangeProfileNext()
         {
             profileIndex++;
-            var list = SaveDataManager.SaveData;
+            var list = SaveDataManager.SaveProfiles;
             if (profileIndex >= list.Count)
             {
                 profileIndex = 0;
@@ -107,7 +109,7 @@ namespace SaveProfileManager.Plugins
         void ChangeProfilePrev()
         {
             profileIndex--;
-            var list = SaveDataManager.SaveData;
+            var list = SaveDataManager.SaveProfiles;
             if (profileIndex < 0)
             {
                 profileIndex = list.Count - 1;
@@ -117,15 +119,19 @@ namespace SaveProfileManager.Plugins
 
         void ChangeSaveProfile(int newIndex)
         {
-            var list = SaveDataManager.SaveData;
+            var list = SaveDataManager.SaveProfiles;
             if (newIndex < 0 || newIndex >= list.Count)
             {
                 return;
             }
 
-            var name = list[profileIndex].ProfileName;
-            ProfileText!.text = name;
-            ProfileImage!.color = list[profileIndex].ProfileColor;
+            UpdateProfileDisplay(list[profileIndex]);
+        }
+
+        void UpdateProfileDisplay(SaveProfile profile)
+        {
+            ProfileText!.text = profile.ProfileName;
+            ProfileImage!.color = profile.ProfileColor;
         }
     }
 }

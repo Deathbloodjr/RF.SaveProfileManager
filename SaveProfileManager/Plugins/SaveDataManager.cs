@@ -11,7 +11,7 @@ namespace SaveProfileManager.Plugins
     public static class SaveDataManager
     {
         static SaveProfile CurrentProfile = null;
-        internal static List<SaveProfile> SaveData = new List<SaveProfile>();
+        internal static List<SaveProfile> SaveProfiles = new List<SaveProfile>();
         internal static List<PluginSaveDataInterface> PluginSaveDataInterfaces = new List<PluginSaveDataInterface>();
 
         internal static void Initialize()
@@ -30,7 +30,7 @@ namespace SaveProfileManager.Plugins
                 {
                     SaveProfile data = new SaveProfile(list[i]);
                     Logger.Log("SaveData loaded: " + data.ProfileName);
-                    SaveData.Add(data);
+                    SaveProfiles.Add(data);
                 }
                 catch (Exception e)
                 {
@@ -39,9 +39,9 @@ namespace SaveProfileManager.Plugins
                 }
             }
 
-            if (SaveData.Count > 0)
+            if (SaveProfiles.Count > 0)
             {
-                CurrentProfile = SaveData[0];
+                CurrentProfile = SaveProfiles[0];
             }
             else
             {
@@ -52,7 +52,7 @@ namespace SaveProfileManager.Plugins
 
         internal static bool ChangeProfile(int index)
         {
-            SaveProfile switchToProfile = SaveData[index];
+            SaveProfile switchToProfile = SaveProfiles[index];
             if (switchToProfile != CurrentProfile)
             {
                 GetSavePathHook.ProfileName = switchToProfile.ProfileName;
@@ -111,6 +111,22 @@ namespace SaveProfileManager.Plugins
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             }
             File.WriteAllText(Plugin.Instance.ConfigSaveProfileDefinitionsPath.Value, node.ToJsonString(options));
+        }
+
+        internal static SaveProfile GetCurrentSaveProfile()
+        {
+            return CurrentProfile;
+        }
+        internal static int GetIndexOfCurrentProfile()
+        {
+            for (int i = 0; i < SaveProfiles.Count; i++)
+            {
+                if (SaveProfiles[i] == CurrentProfile)
+                {
+                    return i;
+                }
+            }
+            return 0;
         }
     }
 }

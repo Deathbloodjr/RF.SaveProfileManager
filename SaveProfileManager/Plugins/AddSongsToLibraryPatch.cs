@@ -25,7 +25,7 @@ namespace SaveProfileManager.Plugins
                 var data = __instance.MusicsData.Datas[i];
                 if (data is not null)
                 {
-                    if (PackedSongUtility.CheckSongFileExists(i))
+                    if (!data.IsDownloaded && PackedSongUtility.CheckSongFileExists(i))
                     {
                         __instance.MusicsData.AddDownloadedSong(i);
                     }
