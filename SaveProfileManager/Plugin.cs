@@ -25,6 +25,8 @@ namespace SaveProfileManager
         public ConfigEntry<string> ConfigSaveProfileDefinitionsPath;
         public ConfigEntry<string> ConfigModDataFolderPath;
 
+        public ConfigEntry<string> ConfigBackupFolderPath;
+
 
 
         public override void Load()
@@ -59,7 +61,12 @@ namespace SaveProfileManager
             ConfigModDataFolderPath = Config.Bind("General",
                 "ModDataFolderPath",
                 Path.Combine(dataFolder, "ModData"),
-                "The path that will contain any mod data. This includes saves and configs. ");
+                "The path of the folder that will contain any mod data. This includes saves and configs. ");
+
+            ConfigBackupFolderPath = Config.Bind("General",
+                "BackupFolderPath",
+                Path.Combine(dataFolder, "Backups"),
+                "The path of the folder that will contain any backups. ");
         }
 
         private void SetupHarmony()
@@ -77,6 +84,7 @@ namespace SaveProfileManager
                 if (result)
                 {
                     SaveDataManager.Initialize();
+                    BackupManager.CreateBackup();
                     Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_NAME} is loaded!");
                 }
                 else
