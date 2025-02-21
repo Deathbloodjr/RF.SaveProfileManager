@@ -10,6 +10,9 @@ namespace SaveProfileManager.Plugins
 
     public class PluginSaveDataInterface
     {
+        /// <summary>
+        /// Guid of plugin
+        /// </summary>
         public string Name { get; set; }
 
         internal SaveManagerFunction? LoadFunction = null;

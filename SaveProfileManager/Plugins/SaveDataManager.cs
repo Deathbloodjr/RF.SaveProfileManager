@@ -12,7 +12,8 @@ namespace SaveProfileManager.Plugins
     {
         static SaveProfile CurrentProfile = null;
         internal static List<SaveProfile> SaveProfiles = new List<SaveProfile>();
-        internal static List<PluginSaveDataInterface> PluginSaveDataInterfaces = new List<PluginSaveDataInterface>();
+        internal static List<PluginSaveDataInterface> Plugins = new List<PluginSaveDataInterface>();
+        internal static Dictionary<PluginSaveDataInterface, bool> ActivePlugins = new Dictionary<PluginSaveDataInterface, bool>();
 
         internal static void Initialize()
         {
@@ -56,49 +57,112 @@ namespace SaveProfileManager.Plugins
             if (switchToProfile != CurrentProfile)
             {
                 GetSavePathHook.ProfileName = switchToProfile.ProfileName;
-                if (switchToProfile.ProfileName == "DEBUG")
-                {
-                    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
-                    {
-                        PluginSaveDataInterfaces[i].UnloadFunction?.Invoke();
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
-                    {
-                        PluginSaveDataInterfaces[i].LoadFunction?.Invoke();
-                    }
-                }
+
+                ReloadMods(switchToProfile);
+
+
+                //if (switchToProfile.ProfileName == "DEBUG")
+                //{
+                //    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+                //    {
+                //        PluginSaveDataInterfaces[i].UnloadFunction?.Invoke();
+                //    }
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+                //    {
+                //        PluginSaveDataInterfaces[i].LoadFunction?.Invoke();
+                //    }
+                //}
                 CurrentProfile = switchToProfile;
                 return true;
             }
             return false;
         }
 
+        internal static void ReloadMods(SaveProfile profile)
+        {
+            // 3 cases can occur
+            // Technically 4, but the 4th requires no action
+            // The mod is on and needs to remain on
+            //     Reload mod
+            //     This won't unpatch and repatch. It should just reload any save/config data.
+            // The mod is on and needs to turn off
+            //     Unload mod
+            // The mod is off and needs to turn on
+            //     Load mod (Reloading shouldn't be necessary I would think)
+            // The mod is off and needs to remain off
+            //     Do nothing
+            for (int i = 0; i < Plugins.Count; i++)
+            {
+                var isEnabledMod = ActivePlugins[Plugins[i]];
+                var toEnableMod = profile.GetModEnabledStatus(Plugins[i]);
+                if (isEnabledMod && toEnableMod)
+                {
+                    Logger.Log("Reloading plugin " + Plugins[i].Name);
+                    Plugins[i].ReloadSaveFunction?.Invoke();
+                }
+                else if (isEnabledMod && !toEnableMod)
+                {
+                    Logger.Log("Unloading plugin " + Plugins[i].Name);
+                    Plugins[i].UnloadFunction?.Invoke();
+                }
+                else if (!isEnabledMod && toEnableMod)
+                {
+                    Logger.Log("Loading plugin " + Plugins[i].Name);
+                    Plugins[i].LoadFunction?.Invoke();
+                }
+                ActivePlugins[Plugins[i]] = toEnableMod;
+            }
+        }
+
         public static void AddPluginSaveData(PluginSaveDataInterface plugin)
         {
-            for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
+            for (int i = 0; i < Plugins.Count; i++)
             {
-                if (PluginSaveDataInterfaces[i].Name == plugin.Name)
+                if (Plugins[i].Name == plugin.Name)
                 {
+                    Logger.Log("Error. Attempted to add a duplicate plugin to the SaveDataManager");
                     return;
                 }
             }
 
-            PluginSaveDataInterfaces.Add(plugin);
+            Plugins.Add(plugin);
+            // Every plugin is set active when it's first loaded
+            // Only on switching profiles would a plugin potentially be disabled
+            ActivePlugins.Add(plugin, true);
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
+        }
+
+        public static string GetProfileSaveDirectory(PluginSaveDataInterface plugin)
+        {
+            string dir = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, CurrentProfile.ProfileName);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            return dir;
         }
 
         static void CreateDefaultJson()
         {
-            JsonArray node = new JsonArray();
-            JsonObject obj = new JsonObject()
+            JsonArray node = new JsonArray()
             {
-                ["ProfileName"] = "Default",
-                ["ProfileColor"] = "#FFFFFF",
+                new JsonObject()
+                {
+                    ["ProfileName"] = "Default",
+                    ["ProfileColor"] = "#FFFFFF",
+                    ["ModsEnabledByDefault"] = false,
+                    ["Mods"] = new JsonArray() {
+                        new JsonObject()
+                        {
+                            ["ModGuid"] = "com.DB.RF.SingleHitBigNotes",
+                            ["Enabled"] = false
+                        }
+                    }
+                }
             };
-            node.Add(obj);
 
             JsonSerializerOptions options = new JsonSerializerOptions()
             {

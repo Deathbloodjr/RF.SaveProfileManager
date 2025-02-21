@@ -23,6 +23,7 @@ namespace SaveProfileManager
         public ConfigEntry<bool> ConfigEnabled;
         //public ConfigEntry<string> ConfigSaveFileName;
         public ConfigEntry<string> ConfigSaveProfileDefinitionsPath;
+        public ConfigEntry<string> ConfigModDataFolderPath;
 
 
 
@@ -54,6 +55,11 @@ namespace SaveProfileManager
                 "SaveProfileDefinitionsPath",
                 Path.Combine(dataFolder, "SaveProfileDefinitions.json"),
                 "The path to the json file containing save profile definitions. ");
+
+            ConfigModDataFolderPath = Config.Bind("General",
+                "ModDataFolderPath",
+                Path.Combine(dataFolder, "ModData"),
+                "The path that will contain any mod data. This includes saves and configs. ");
         }
 
         private void SetupHarmony()
