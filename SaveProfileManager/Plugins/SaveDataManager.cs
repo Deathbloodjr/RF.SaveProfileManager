@@ -56,26 +56,17 @@ namespace SaveProfileManager.Plugins
             SaveProfile switchToProfile = SaveProfiles[index];
             if (switchToProfile != CurrentProfile)
             {
+                // This has to be done first
+                // Since ReloadMods will change saves ->
+                // Mods will get next profile directory from SaveDataManager
+                // next profile directory comes from CurrentProfile
+                // If this is done last, it gets the directory for the previous profile
+                CurrentProfile = switchToProfile;
+
                 GetSavePathHook.ProfileName = switchToProfile.ProfileName;
 
                 ReloadMods(switchToProfile);
 
-
-                //if (switchToProfile.ProfileName == "DEBUG")
-                //{
-                //    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
-                //    {
-                //        PluginSaveDataInterfaces[i].UnloadFunction?.Invoke();
-                //    }
-                //}
-                //else
-                //{
-                //    for (int i = 0; i < PluginSaveDataInterfaces.Count; i++)
-                //    {
-                //        PluginSaveDataInterfaces[i].LoadFunction?.Invoke();
-                //    }
-                //}
-                CurrentProfile = switchToProfile;
                 return true;
             }
             return false;
