@@ -43,7 +43,7 @@ namespace SaveProfileManager
                     break;
                 case LogType.Debug:
 #if DEBUG
-                    Plugin.Log.LogDebug(value);
+                    Plugin.Log.LogInfo(value);
 #endif
                     break;
             }
