@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BepInEx.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using static ControllerManager;
 
 namespace SaveProfileManager.Plugins
 {
@@ -89,21 +91,40 @@ namespace SaveProfileManager.Plugins
             {
                 var isEnabledMod = ActivePlugins[Plugins[i]];
                 var toEnableMod = profile.GetModEnabledStatus(Plugins[i]);
-                if (isEnabledMod && toEnableMod)
+                // Mod needs to be enabled
+                if (toEnableMod)
                 {
-                    Logger.Log("Reloading plugin " + Plugins[i].Name);
-                    Plugins[i].ReloadSaveFunction?.Invoke();
+                    var config = GetProfileConfig(CurrentProfile, Plugins[i]);
+                    var saveDir = Path.GetDirectoryName(config.ConfigFilePath);
+                    saveDir = Path.GetRelativePath(Environment.CurrentDirectory, saveDir);
+
+                    Plugins[i].ConfigSetupFunction?.Invoke(config, saveDir);
+                    // Mod is currently enabled, reload it
+                    if (isEnabledMod)
+                    {
+                        Logger.Log("Reloading plugin " + Plugins[i].Name);
+                        Plugins[i].ReloadSaveFunction?.Invoke();
+                    }
+                    // Mod is currently disabled, load it
+                    else
+                    {
+                        Logger.Log("Loading plugin " + Plugins[i].Name);
+                        Plugins[i].LoadFunction?.Invoke();
+                    }
                 }
-                else if (isEnabledMod && !toEnableMod)
+                // Mod needs to be disabled
+                else
                 {
-                    Logger.Log("Unloading plugin " + Plugins[i].Name);
-                    Plugins[i].UnloadFunction?.Invoke();
+                    // Mod is currently enabled, unload it
+                    if (isEnabledMod)
+                    {
+                        Logger.Log("Unloading plugin " + Plugins[i].Name);
+                        Plugins[i].UnloadFunction?.Invoke();
+                    }
+                    // Otherwise, mod is currently disabled, do nothing
                 }
-                else if (!isEnabledMod && toEnableMod)
-                {
-                    Logger.Log("Loading plugin " + Plugins[i].Name);
-                    Plugins[i].LoadFunction?.Invoke();
-                }
+
+              
                 ActivePlugins[Plugins[i]] = toEnableMod;
             }
         }
@@ -126,15 +147,13 @@ namespace SaveProfileManager.Plugins
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
         }
 
-        public static string GetProfileSaveDirectory(PluginSaveDataInterface plugin)
+        internal static ConfigFile GetProfileConfig(SaveProfile profile, PluginSaveDataInterface plugin)
         {
-            string dir = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, CurrentProfile.ProfileName);
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-            return dir;
+            string configFilePath = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, profile.ProfileName, plugin.Name + "." + profile.ProfileName + ".cfg");
+            ConfigFile config = new ConfigFile(configFilePath, true);
+            return config;
         }
+
 
         static void CreateDefaultJson()
         {

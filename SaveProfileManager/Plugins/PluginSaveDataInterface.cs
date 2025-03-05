@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BepInEx.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace SaveProfileManager.Plugins
 {
     public delegate void SaveManagerFunction();
+    public delegate void SaveManagerConfigSetupFunction(ConfigFile config, string saveFolder);
 
     public class PluginSaveDataInterface
     {
@@ -18,6 +20,7 @@ namespace SaveProfileManager.Plugins
         internal SaveManagerFunction? LoadFunction = null;
         internal SaveManagerFunction? UnloadFunction = null;
         internal SaveManagerFunction? ReloadSaveFunction = null;
+        internal SaveManagerConfigSetupFunction? ConfigSetupFunction = null;
 
         public PluginSaveDataInterface(string name)
         {
@@ -39,10 +42,16 @@ namespace SaveProfileManager.Plugins
             ReloadSaveFunction = reloadSaveFunction;
         }
 
+        public void AssignConfigSetupFunction(SaveManagerConfigSetupFunction configSetupFunction)
+        {
+            ConfigSetupFunction = configSetupFunction;
+        }
+
         public void AddToManager()
         {
             if (LoadFunction is not null &&
-                UnloadFunction is not null)
+                UnloadFunction is not null &&
+                ConfigSetupFunction is not null)
             {
                 SaveDataManager.AddPluginSaveData(this);
             }
@@ -51,8 +60,19 @@ namespace SaveProfileManager.Plugins
                 List<string> output = new List<string>()
                 {
                     "Error adding plugin to SaveProfileManager: " + this.Name,
-                    "LoadFunction or UnloadFunction were null.",
                 };
+                if (LoadFunction is null)
+                {
+                    output.Add("LoadFunction is null");
+                }
+                if (UnloadFunction is null)
+                {
+                    output.Add("UnloadFunction is null");
+                }
+                if (ConfigSetupFunction is null)
+                {
+                    output.Add("ConfigSetupFunction is null");
+                }
                 Logger.Log(output, LogType.Error);
             }
         }
