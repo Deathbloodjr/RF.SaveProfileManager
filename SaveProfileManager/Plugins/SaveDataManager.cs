@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using Platform.Steam;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,15 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using UnityEngine;
 using static ControllerManager;
 
 namespace SaveProfileManager.Plugins
 {
     public static class SaveDataManager
     {
+        const string DefaultProfileName = "Default";
+
         static SaveProfile CurrentProfile = null;
         internal static List<SaveProfile> SaveProfiles = new List<SaveProfile>();
         internal static List<PluginSaveDataInterface> Plugins = new List<PluginSaveDataInterface>();
@@ -44,7 +48,7 @@ namespace SaveProfileManager.Plugins
 
             if (SaveProfiles.Count > 0)
             {
-                CurrentProfile = SaveProfiles[0];
+                //CurrentProfile = SaveProfiles[0];
             }
             else
             {
@@ -149,7 +153,12 @@ namespace SaveProfileManager.Plugins
 
         internal static ConfigFile GetProfileConfig(SaveProfile profile, PluginSaveDataInterface plugin)
         {
-            string configFilePath = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, profile.ProfileName, plugin.Name + "." + profile.ProfileName + ".cfg");
+            var profileName = profile.ProfileName;
+            if (profileName == DefaultProfileName)
+            {
+                profileName = SteamAccount.SteamId.GetAccountID().ToString();
+            }
+            string configFilePath = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, profileName, plugin.Name + "." + profileName + ".cfg");
             ConfigFile config = new ConfigFile(configFilePath, true);
             return config;
         }
@@ -161,7 +170,7 @@ namespace SaveProfileManager.Plugins
             {
                 new JsonObject()
                 {
-                    ["ProfileName"] = "Default",
+                    ["ProfileName"] = DefaultProfileName,
                     ["ProfileColor"] = "#FFFFFF",
                     ["ModsEnabledByDefault"] = false,
                     ["Mods"] = new JsonArray() {
@@ -189,6 +198,17 @@ namespace SaveProfileManager.Plugins
 
         internal static SaveProfile GetCurrentSaveProfile()
         {
+            if (CurrentProfile is null)
+            {
+                if (SaveProfiles.Count > 0)
+                {
+                    return SaveProfiles[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
             return CurrentProfile;
         }
         internal static int GetIndexOfCurrentProfile()

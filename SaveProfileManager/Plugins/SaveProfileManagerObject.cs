@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks.Linq;
 using Il2CppInterop.Runtime.Injection;
+using Platform.Steam;
 using System;
 using System.Collections.Generic;
 using System.Linq;
