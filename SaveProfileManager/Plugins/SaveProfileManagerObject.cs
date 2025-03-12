@@ -35,6 +35,12 @@ namespace SaveProfileManager.Plugins
                 ProfileText.transform.position = new Vector2(750, 270);
                 // Probably not perfect, but should be good enough
                 ProfileText.rectTransform.sizeDelta = new Vector2(300, 150);
+
+                var fontManager = TaikoSingletonMonoBehaviour<CommonObjects>.Instance.MyDataManager.FontTMPMgr;
+                TMP_FontAsset reqValuefont = fontManager.GetDescriptionFontAsset(DataConst.FontType.EFIGS);
+                Material fontMaterial = fontManager.GetDescriptionFontMaterial(DataConst.FontType.EFIGS, DataConst.DescriptionFontMaterialType.OutlineSongInfo);
+                ProfileText.font = reqValuefont;
+                ProfileText.fontSharedMaterial = fontMaterial;
             }
             if (ProfileImage is null)
             {

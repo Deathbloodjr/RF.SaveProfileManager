@@ -2,6 +2,48 @@
  A Rhythm Festival mod to manage save files and mod save data.
   
   <a href="https://shorturl.at/f8vW7"> <img src="Resources/InstallButton.png" alt="One-click Install using the Taiko Mod Manager" width="256"/> </a>
+
+# Usage
+ When first installed and ran, it will create a SaveProfileDefinitions.json file in the SaveProfileDefinitionsPath entry set in the config file.\
+ This is set to BepInEx\data\SaveProfileManager\SaveProfileDefinitions.json by default.\
+
+The file will look like this as an example
+```json
+[
+  {
+    "ProfileName": "Default",
+    "ProfileColor": "#FFFFFF",
+    "ModsEnabledByDefault": true,
+    "Mods": [
+      {
+        "ModGuid": "com.DB.RF.DisplayCurrentCrownStatus",
+        "Enabled": false
+      }
+    ]
+  },
+  {
+    "ProfileName": "Drum",
+    "ProfileColor": "#000000",
+    "ModsEnabledByDefault": true,
+    "Mods": [
+      {
+        "ModGuid": "com.DB.RF.SwapSongLanguages",
+        "Enabled": false
+      }
+    ]
+  }
+]
+```
+The "Default" Profile will use your official save file based on your steam account ID, so it's recommended to keep that. Any other profiles can just be added on, with no realistic limit.\
+In-game, you can switch between these by hitting left/right on the title screen. You'll see the current profile at the top right.\
+\
+This mod is capable of loading, unloading, and reloading compatible mods, allowing you to set whether specific mods are enabled or disabled on specific profiles. You can set this as shown in the json example above.\
+\
+Each profile also has its own config file that you can modify as well.\
+The location of these will be defined in the SaveProfileManager.cfg BepInEx config file, under the ModDataFolderPath entry.\
+From that location, select the mod folder you want to modify, then the profile folder, and the config file will be there. You will need to launch the game and the profile first in order to generate these config files. 
+
+
   
 # Requirements
  Visual Studio 2022 or newer\
