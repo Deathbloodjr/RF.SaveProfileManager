@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace SaveProfileManager.Plugins
 {
+    public delegate void SaveManagerLoadFunction(bool enabled);
     public delegate void SaveManagerFunction();
-    public delegate void SaveManagerConfigSetupFunction(ConfigFile config, string saveFolder);
+    public delegate void SaveManagerConfigSetupFunction(ConfigFile config, string saveFolder, bool isSaveManager);
 
     public class PluginSaveDataInterface
     {
@@ -17,7 +18,7 @@ namespace SaveProfileManager.Plugins
         /// </summary>
         public string Name { get; set; }
 
-        internal SaveManagerFunction? LoadFunction = null;
+        internal SaveManagerLoadFunction? LoadFunction = null;
         internal SaveManagerFunction? UnloadFunction = null;
         internal SaveManagerFunction? ReloadSaveFunction = null;
         internal SaveManagerConfigSetupFunction? ConfigSetupFunction = null;
@@ -27,7 +28,7 @@ namespace SaveProfileManager.Plugins
             Name = name;
         }
 
-        public void AssignLoadFunction(SaveManagerFunction loadFunction)
+        public void AssignLoadFunction(SaveManagerLoadFunction loadFunction)
         {
             LoadFunction = loadFunction;
         }

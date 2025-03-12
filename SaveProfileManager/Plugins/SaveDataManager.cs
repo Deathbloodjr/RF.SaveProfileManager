@@ -102,7 +102,7 @@ namespace SaveProfileManager.Plugins
                     var saveDir = Path.GetDirectoryName(config.ConfigFilePath);
                     saveDir = Path.GetRelativePath(Environment.CurrentDirectory, saveDir);
 
-                    Plugins[i].ConfigSetupFunction?.Invoke(config, saveDir);
+                    Plugins[i].ConfigSetupFunction?.Invoke(config, saveDir, true);
                     // Mod is currently enabled, reload it
                     if (isEnabledMod)
                     {
@@ -113,7 +113,7 @@ namespace SaveProfileManager.Plugins
                     else
                     {
                         Logger.Log("Loading plugin " + Plugins[i].Name);
-                        Plugins[i].LoadFunction?.Invoke();
+                        Plugins[i].LoadFunction?.Invoke(toEnableMod);
                     }
                 }
                 // Mod needs to be disabled
