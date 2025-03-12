@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ModName>SaveProfileManager</ModName>
-    <ModVersion>0.0.1</ModVersion>
-    <Description>A Rhythm Festival mod to manager save files and mod save data.</Description>
+    <ModVersion>1.0.0</ModVersion>
+    <Description>A Rhythm Festival mod to manage save files and mod save data.</Description>
   </PropertyGroup>
   
   <Target Name="UserFile" AfterTargets="PreBuildEvent">

@@ -33,6 +33,8 @@ namespace SaveProfileManager.Plugins
                 ProfileText = nameObject.AddComponent<TextMeshProUGUI>();
                 ProfileText.alignment = TextAlignmentOptions.Center;
                 ProfileText.transform.position = new Vector2(750, 270);
+                // Probably not perfect, but should be good enough
+                ProfileText.rectTransform.sizeDelta = new Vector2(300, 150);
             }
             if (ProfileImage is null)
             {

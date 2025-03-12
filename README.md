@@ -1,7 +1,7 @@
 # RF.SaveProfileManager
- A Rhythm Festival mod to manager save files and mod save data.
+ A Rhythm Festival mod to manage save files and mod save data.
   
-  <a href="taikomodmanager:insertGithubLinkhereAndReplaceWithUrlShortener"> <img src="Resources/InstallButton.png" alt="One-click Install using the Taiko Mod Manager" width="256"/> </a>
+  <a href="https://shorturl.at/f8vW7"> <img src="Resources/InstallButton.png" alt="One-click Install using the Taiko Mod Manager" width="256"/> </a>
   
 # Requirements
  Visual Studio 2022 or newer\
