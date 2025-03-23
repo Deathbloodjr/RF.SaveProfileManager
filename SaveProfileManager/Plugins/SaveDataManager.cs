@@ -133,7 +133,7 @@ namespace SaveProfileManager.Plugins
             }
         }
 
-        public static void AddPluginSaveData(PluginSaveDataInterface plugin)
+        public static void AddPluginSaveData(PluginSaveDataInterface plugin, bool isEnabled)
         {
             for (int i = 0; i < Plugins.Count; i++)
             {
@@ -147,7 +147,8 @@ namespace SaveProfileManager.Plugins
             Plugins.Add(plugin);
             // Every plugin is set active when it's first loaded
             // Only on switching profiles would a plugin potentially be disabled
-            ActivePlugins.Add(plugin, true);
+            // Yeah that was a big ass lie
+            ActivePlugins.Add(plugin, isEnabled);
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
         }
 

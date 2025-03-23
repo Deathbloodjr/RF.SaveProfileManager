@@ -48,13 +48,13 @@ namespace SaveProfileManager.Plugins
             ConfigSetupFunction = configSetupFunction;
         }
 
-        public void AddToManager()
+        public void AddToManager(bool isEnabled)
         {
             if (LoadFunction is not null &&
                 UnloadFunction is not null &&
                 ConfigSetupFunction is not null)
             {
-                SaveDataManager.AddPluginSaveData(this);
+                SaveDataManager.AddPluginSaveData(this, isEnabled);
             }
             else
             {
