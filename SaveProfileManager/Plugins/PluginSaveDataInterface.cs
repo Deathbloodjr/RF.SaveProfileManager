@@ -51,8 +51,7 @@ namespace SaveProfileManager.Plugins
         public void AddToManager(bool isEnabled)
         {
             if (LoadFunction is not null &&
-                UnloadFunction is not null &&
-                ConfigSetupFunction is not null)
+                UnloadFunction is not null)
             {
                 SaveDataManager.AddPluginSaveData(this, isEnabled);
             }
@@ -69,10 +68,6 @@ namespace SaveProfileManager.Plugins
                 if (UnloadFunction is null)
                 {
                     output.Add("UnloadFunction is null");
-                }
-                if (ConfigSetupFunction is null)
-                {
-                    output.Add("ConfigSetupFunction is null");
                 }
                 Logger.Log(output, LogType.Error);
             }

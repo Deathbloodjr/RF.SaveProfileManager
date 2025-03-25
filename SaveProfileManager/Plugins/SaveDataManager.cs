@@ -145,9 +145,6 @@ namespace SaveProfileManager.Plugins
             }
 
             Plugins.Add(plugin);
-            // Every plugin is set active when it's first loaded
-            // Only on switching profiles would a plugin potentially be disabled
-            // Yeah that was a big ass lie
             ActivePlugins.Add(plugin, isEnabled);
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
         }
