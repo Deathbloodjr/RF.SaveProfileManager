@@ -21,6 +21,7 @@ namespace SaveProfileManager.Plugins
         internal static List<PluginSaveDataInterface> Plugins = new List<PluginSaveDataInterface>();
         internal static Dictionary<PluginSaveDataInterface, bool> ActivePlugins = new Dictionary<PluginSaveDataInterface, bool>();
 
+        static bool IsInitialized = false;
         internal static void Initialize()
         {
             string filePath = Plugin.Instance.ConfigSaveProfileDefinitionsPath.Value;
@@ -55,6 +56,9 @@ namespace SaveProfileManager.Plugins
                 // Surely there should be DEFAULT at least, no?
                 Logger.Log("No SaveData profiles found", LogType.Error);
             }
+
+            GenerateConfigFiles();
+            IsInitialized = true;
         }
 
         internal static bool ChangeProfile(int index)
@@ -133,7 +137,7 @@ namespace SaveProfileManager.Plugins
             }
         }
 
-        public static void AddPluginSaveData(PluginSaveDataInterface plugin, bool isEnabled)
+        internal static void AddPluginSaveData(PluginSaveDataInterface plugin, bool isEnabled)
         {
             for (int i = 0; i < Plugins.Count; i++)
             {
@@ -146,6 +150,10 @@ namespace SaveProfileManager.Plugins
 
             Plugins.Add(plugin);
             ActivePlugins.Add(plugin, isEnabled);
+            if (IsInitialized)
+            {
+                GenerateConfigFile(plugin);
+            }
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
         }
 
@@ -219,6 +227,26 @@ namespace SaveProfileManager.Plugins
                 }
             }
             return 0;
+        }
+
+        internal static void GenerateConfigFiles()
+        {
+            for (int i = 0; i < Plugins.Count; i++)
+            {
+                GenerateConfigFile(Plugins[i]);
+            }
+        }
+
+        internal static void GenerateConfigFile(PluginSaveDataInterface plugin)
+        {
+            for (int i = 0; i < SaveProfiles.Count; i++)
+            {
+                var config = GetProfileConfig(SaveProfiles[i], plugin);
+                var saveDir = Path.GetDirectoryName(config.ConfigFilePath);
+                saveDir = Path.GetRelativePath(Environment.CurrentDirectory, saveDir);
+
+                Plugins[i].ConfigSetupFunction?.Invoke(config, saveDir, true);
+            }
         }
     }
 }
