@@ -255,7 +255,7 @@ namespace SaveProfileManager.Plugins
 
                 plugin.ConfigSetupFunction?.Invoke(config, saveDir, true);
 
-                Logger.Log($"Config generated for mod {plugin.Name} for profile {SaveProfiles[i].ProfileName}", LogType.Debug);
+                //Logger.Log($"Config generated for mod {plugin.Name} for profile {SaveProfiles[i].ProfileName}", LogType.Debug);
             }
         }
     }
