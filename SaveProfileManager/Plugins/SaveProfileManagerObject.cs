@@ -98,7 +98,7 @@ namespace SaveProfileManager.Plugins
             }
             else if (TaikoSingletonMonoBehaviour<ControllerManager>.Instance.GetOkDown(ControllerManager.ControllerPlayerNo.Player1))
             {
-                if (TestingHooks.titleSceneInstance.skipped || !TestingHooks.titleSceneInstance.TitleAnimator.IsPlaying("In"))
+                if (StartupHook.titleSceneInstance.skipped || !StartupHook.titleSceneInstance.TitleAnimator.IsPlaying("In"))
                 {
                     if (SaveDataManager.ChangeProfile(profileIndex))
                     {

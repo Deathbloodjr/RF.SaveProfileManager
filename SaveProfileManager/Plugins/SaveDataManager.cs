@@ -21,7 +21,6 @@ namespace SaveProfileManager.Plugins
         internal static List<PluginSaveDataInterface> Plugins = new List<PluginSaveDataInterface>();
         internal static Dictionary<PluginSaveDataInterface, bool> ActivePlugins = new Dictionary<PluginSaveDataInterface, bool>();
 
-        static bool IsInitialized = false;
         internal static void Initialize()
         {
             string filePath = Plugin.Instance.ConfigSaveProfileDefinitionsPath.Value;
@@ -56,9 +55,6 @@ namespace SaveProfileManager.Plugins
                 // Surely there should be DEFAULT at least, no?
                 Logger.Log("No SaveData profiles found", LogType.Error);
             }
-
-            GenerateConfigFiles();
-            IsInitialized = true;
         }
 
         internal static bool ChangeProfile(int index)
@@ -150,22 +146,23 @@ namespace SaveProfileManager.Plugins
 
             Plugins.Add(plugin);
             ActivePlugins.Add(plugin, isEnabled);
-            if (IsInitialized)
-            {
-                GenerateConfigFile(plugin);
-            }
             Logger.Log("Plugin added to SaveDataManager: " + plugin.Name);
         }
 
-        internal static ConfigFile GetProfileConfig(SaveProfile profile, PluginSaveDataInterface plugin)
+        internal static ConfigFile? GetProfileConfig(SaveProfile profile, PluginSaveDataInterface plugin)
         {
             var profileName = profile.ProfileName;
             if (profileName == DefaultProfileName)
             {
                 profileName = SteamAccount.SteamId.GetAccountID().ToString();
+                if (profileName == "0")
+                {
+                    Logger.Log("Error getting AccountId", LogType.Error);
+                    return null;
+                }
             }
             string configFilePath = Path.Combine(Plugin.Instance.ConfigModDataFolderPath.Value, plugin.Name, profileName, plugin.Name + "." + profileName + ".cfg");
-            ConfigFile config = new ConfigFile(configFilePath, true);
+            ConfigFile config = new ConfigFile(configFilePath, false);
             return config;
         }
 
@@ -241,11 +238,24 @@ namespace SaveProfileManager.Plugins
         {
             for (int i = 0; i < SaveProfiles.Count; i++)
             {
+                if (plugin.ConfigSetupFunction is null)
+                {
+                    continue;
+                }
+                // config will be null if the Steam AccountId returns 0
+                // Which I assume happens when steam isn't properly loaded yet
+                // And since this occurs on startup, makes sense that steam may not be loaded yet
                 var config = GetProfileConfig(SaveProfiles[i], plugin);
+                if (config is null)
+                {
+                    continue;
+                }
                 var saveDir = Path.GetDirectoryName(config.ConfigFilePath);
                 saveDir = Path.GetRelativePath(Environment.CurrentDirectory, saveDir);
 
-                Plugins[i].ConfigSetupFunction?.Invoke(config, saveDir, true);
+                plugin.ConfigSetupFunction?.Invoke(config, saveDir, true);
+
+                Logger.Log($"Config generated for mod {plugin.Name} for profile {SaveProfiles[i].ProfileName}", LogType.Debug);
             }
         }
     }
