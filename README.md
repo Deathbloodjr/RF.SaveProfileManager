@@ -1,7 +1,6 @@
 # RF.SaveProfileManager
  A Rhythm Festival mod to manage save files and mod save data.
-  
-  <a href="https://shorturl.at/f8vW7"> <img src="Resources/InstallButton.png" alt="One-click Install using the Taiko Mod Manager" width="256"/> </a>
+ 
 
 # Usage
  When first installed and ran, it will create a SaveProfileDefinitions.json file in the SaveProfileDefinitionsPath entry set in the config file.\
