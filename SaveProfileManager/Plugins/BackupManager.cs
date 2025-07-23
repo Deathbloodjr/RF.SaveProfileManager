@@ -10,19 +10,39 @@ namespace SaveProfileManager.Plugins
 {
     internal class BackupManager
     {
-        static string BackupPath = Plugin.Instance.ConfigBackupFolderPath.Value;
+        static string BackupPath => Plugin.Instance.ConfigBackupFolderPath.Value;
+
+        const string DateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
 
         public static void CreateBackup()
         {
             var now = DateTime.Now;
             var latestBackup = GetLatestBackupDateTime();
 
+            // If you rewind your system time to a previous day
+            // Should it backup?
+            // I vote yes, for this hypothetical situation
+            // Someone fastfowards their time to 1 year in the future for whatever reason
+            // Backup is made
+            // They return to current date
+            // No backups are made for a full year - Bad
             if (latestBackup.Date == now.Date)
             {
                 return;
             }
 
-            var directoryPath = Path.Combine(BackupPath, now.ToString("yyyy-MM-dd_HH-mm-ss"));
+            Logger.Log("Creating Save Backup");
+
+            // Make sure Backup path is not within ModData path
+            // If it is, revert Backup path to default maybe?
+            if (BackupPath.Contains(Plugin.Instance.ConfigModDataFolderPath.Value))
+            {
+                Logger.Log("Backup path cannot be within ModData path. Reverting to default backup path", LogType.Warning);
+                Plugin.Instance.ConfigBackupFolderPath.Value = (string)Plugin.Instance.ConfigBackupFolderPath.DefaultValue;
+            }
+
+
+            var directoryPath = Path.Combine(BackupPath, now.ToString(DateTimeFormat));
             // The directory should never exist ahead of time
             // Even if it does, creating the directory just wouldn't do anything then (I think)
             Directory.CreateDirectory(directoryPath);
@@ -44,7 +64,7 @@ namespace SaveProfileManager.Plugins
             {
                 try
                 {
-                    var dirDateTime = DateTime.ParseExact(subDirs[i].Name, "yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
+                    var dirDateTime = DateTime.ParseExact(subDirs[i].Name, DateTimeFormat, CultureInfo.InvariantCulture);
                     if (dirDateTime > latestDateTime)
                     {
                         latestDateTime = dirDateTime;

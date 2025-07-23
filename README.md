@@ -1,10 +1,11 @@
 # RF.SaveProfileManager
- A Rhythm Festival mod to manage save files and mod save data.
+ A Rhythm Festival mod to manage save files and mod save data.\
+ Also makes backups of any save data.
  
 
 # Usage
  When first installed and ran, it will create a SaveProfileDefinitions.json file in the SaveProfileDefinitionsPath entry set in the config file.\
- This is set to BepInEx\data\SaveProfileManager\SaveProfileDefinitions.json by default.\
+ This is set to BepInEx\data\SaveProfileManager\SaveProfileDefinitions.json by default.
 
 The file will look like this as an example
 ```json
@@ -27,6 +28,10 @@ The file will look like this as an example
     "Mods": [
       {
         "ModGuid": "com.DB.RF.SwapSongLanguages",
+        "Enabled": false
+      },
+      {
+        "ModGuid": "com.DB.RF.DisplayCurrentCrownStatus",
         "Enabled": false
       }
     ]
