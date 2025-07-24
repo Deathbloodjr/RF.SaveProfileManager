@@ -3,6 +3,9 @@
 
  This mod lets you create separate save files and enable or disable mods based on which profile you're on (provided the mod supports it).\
  It also makes backups of all your save data.
+
+ Within this mod's config file, there's an entry for the Backup path, and ModData path.\
+ The ModData path contains folders for each mod you have installed, and within those have folders for each profile. Each of these folders has a config file and whatever other data is relevant for each profile. 
  
 
 # Usage
