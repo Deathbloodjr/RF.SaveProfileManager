@@ -1,6 +1,8 @@
 # RF.SaveProfileManager
- A Rhythm Festival mod to manage save files and mod save data.\
- Also makes backups of any save data.
+ A Rhythm Festival mod to manage save files and mod save data.
+
+ This mod lets you create separate save files and enable or disable mods based on which profile you're on.\
+ It also makes backups of all your save data.
  
 
 # Usage
