@@ -106,14 +106,20 @@ namespace SaveProfileManager.Plugins
                     // Mod is currently enabled, reload it
                     if (isEnabledMod)
                     {
-                        Logger.Log("Reloading plugin " + Plugins[i].Name);
-                        Plugins[i].ReloadSaveFunction?.Invoke();
+                        if (Plugins[i].ReloadSaveFunction is not null)
+                        {
+                            Logger.Log("Reloading plugin " + Plugins[i].Name);
+                            Plugins[i].ReloadSaveFunction!.Invoke();
+                        }
                     }
                     // Mod is currently disabled, load it
                     else
                     {
-                        Logger.Log("Loading plugin " + Plugins[i].Name);
-                        Plugins[i].LoadFunction?.Invoke(toEnableMod);
+                        if (Plugins[i].LoadFunction is not null)
+                        {
+                            Logger.Log("Loading plugin " + Plugins[i].Name);
+                            Plugins[i].LoadFunction!.Invoke(toEnableMod);
+                        }
                     }
                 }
                 // Mod needs to be disabled
